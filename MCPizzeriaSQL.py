@@ -18,18 +18,16 @@ with sqlite3.connect("MCPizzeria.db") as db:
 
 def maakTabellenAan():
  # Maak een nieuwe tabel met 3 kolommen: id, naam, prijs
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS tbl_pizzas(
-            gerechtID INTEGER PRIMARY KEY AUTOINCREMENT,
-            gerechtNaam TEXT NOT NULL,
-            gerechtPrijs REAL NOT NULL);""")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS tbl_pizzas(gerechtID INTEGER PRIMARY KEY AUTOINCREMENT,gerechtNaam TEXT NOT NULL,gerechtPrijs REAL NOT NULL);""")
     print("Tabel 'tbl_pizzas' aangemaakt.")
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS tbl_klanten(
     klantNr INTEGER PRIMARY KEY AUTOINCREMENT,
     klantAchternaam TEXT);""")
     print("Tabel 'tbl_klanten' aangemaakt.")
-    
+    cursor.execute("""CREATE TABLE IF NOT EXISTS tbl_winkelWagen(bestelRegel INTEGER PRIMARY KEY AUTOINCREMENT, klantNr INTEGER, gerechtID INTEGER, aantal INTEGER NOT NULL, FOREIGN KEY (klantNr) REFERENCES tbl_klanten(klantNr) FOREIGN KEY (gerechtID) REFERENCES tbl_pizzas(gerechtID));""")
+    print("Tabel 'tbl_winkelWagen' aangemaakt.")
+
 
 def printTabel(tabel_naam):
     cursor.execute("SELECT * FROM " + tabel_naam) #SQL om ALLE gegevens te halen
@@ -81,10 +79,22 @@ def zoekPizzaInTabel(ingevoerde_pizza):
     return zoek_resultaat
 
 def vraagOpGegevensPizzaTabel():
- cursor.execute("SELECT * FROM tbl_pizzas")
- resultaat = cursor.fetchall()
- print("Tabel tbl_pizzas:", resultaat)
- return resultaat
+    cursor.execute("SELECT * FROM tbl_pizzas")
+    resultaat = cursor.fetchall()
+    print("Tabel tbl_pizzas:", resultaat)
+    return resultaat
+
+def voegToeAanWinkelWagen(klantNr, gerechtID, aantal):
+    cursor.execute("INSERT INTO tbl_winkelWagen VALUES(NULL, ?, ?, ?)", (klantNr, gerechtID, aantal,))
+    db.commit()#gegevens in de database zetten
+    printTabel("tbl_winkelWagen")
+
+def vraagOpGegevensWinkelWagenTabel():
+    cursor.execute("SELECT * FROM tbl_winkelWagen")
+    resultaat = cursor.fetchall()
+    print("Tabel tbl_winkelWagen:", resultaat)
+    return resultaat
+
 ### --------- Hoofdprogramma  ---------------
 
 maakTabellenAan()

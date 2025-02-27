@@ -37,6 +37,27 @@ def toonMenuInListbox():
     for regel in pizza_tabel:
         listboxMenu.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
 
+def voegToeAanWinkelWagen():
+    klantNr = invoerveldKlantNr.get()
+    gerechtID = ingevoerde_geselecteerdePizza.get()
+    aantal = aantalGekozen.get()
+    MCPizzeriaSQL.voegToeAanWinkelWagen(klantNr, gerechtID, aantal )
+    winkelwagen_tabel = MCPizzeriaSQL.vraagOpGegevensWinkelWagenTabel()
+    listboxWinkelwagen.delete(0, END) #listbox eerst even leeg maken
+    for regel in winkelwagen_tabel:
+        listboxWinkelwagen.insert(END, regel)
+
+
+### functie voor het selecteren van een rij uit de listbox en deze in een andere veld te plaatsen
+def haalGeselecteerdeRijOp(event):
+    #bepaal op welke regel er geklikt is
+    geselecteerdeRegelInLijst = listboxMenu.curselection()[0] 
+    #haal tekst uit die regel
+    geselecteerdeTekst = listboxMenu.get(geselecteerdeRegelInLijst) 
+    #verwijder tekst uit veld waar je in wilt schrijven, voor het geval er al iets staat
+    invoerveldGeselecteerdePizza.delete(0, END) 
+    #zet tekst in veld
+    invoerveldGeselecteerdePizza.insert(0, geselecteerdeTekst)
 
 ### --------- Hoofdprogramma  ---------------
 
@@ -81,10 +102,35 @@ labelMogelijkheden.grid(row=5, column=0, sticky="W")
 
 listboxMenu = Listbox(venster, height=6, width=50)
 listboxMenu.grid(row=5, column=1, rowspan=6, columnspan=2, sticky="W")
+listboxMenu.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp)
 
 knopToonPizzas = Button(venster, text="Toon alle pizza's", width=12, command=toonMenuInListbox)
 knopToonPizzas.grid(row=5, column=4)
 
+labelGekozenPizza = Label(venster, text="Gekozen pizza:")
+labelGekozenPizza.grid(row=14, column=0, sticky="W")
+
+ingevoerde_geselecteerdePizza = StringVar()
+invoerveldGeselecteerdePizza= Entry(venster, textvariable=ingevoerde_geselecteerdePizza)
+invoerveldGeselecteerdePizza.grid(row=14, column=1, sticky="W")
+
+labelAantal = Label(venster, text="Aantal:")
+labelAantal.grid(row=15, column=0, sticky="W")
+
+aantalGekozen = IntVar()
+aantalGekozen.set(1)
+optionMenuPizzaAantal = OptionMenu(venster, aantalGekozen, 1,2,3)
+optionMenuPizzaAantal.grid(row=15, column=1)
+
+knopVoegToe = Button(venster, text="Voeg toe", width=12, command=voegToeAanWinkelWagen)
+knopVoegToe.grid(row=15 , column=4)
+
+labelBestelling = Label(venster, text="Bestelling:")
+labelBestelling.grid(row=16, column=0, sticky="W")
+
+listboxWinkelwagen= Listbox(venster, height=6, width=50)
+listboxWinkelwagen.grid(row=16, column=1, rowspan=6, columnspan=2, sticky="W")
+listboxWinkelwagen.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp)
 
 #reageert op gebruikersinvoer, deze regel als laatste laten staan
 venster.mainloop()
