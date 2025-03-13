@@ -30,29 +30,31 @@ def maakTabellenAan():
     print("Tabel 'tbl_VakGegevens' aangemaakt.")
     cursor.execute("""CREATE TABLE IF NOT EXISTS tbl_VakDocentGegevens(
                    combi_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                   aantal_uur INTEGER,
                    vak_id INTEGER NOT NULL,
-                   FOREIGN KEY(vak_id) REFERENCES tbl_vakGegevens(vak_id), 
                    Afkorting TEXT NOT NULL,
-                   FOREIGN KEY(Afkorting) REFERENCES tbl_NAWGegevens(Afkorting),
-                    aantal_uur INTEGER);""")
+                   FOREIGN KEY(vak_id) REFERENCES tbl_vakGegevens(vak_id)
+                   FOREIGN KEY(Afkorting) REFERENCES tbl_NAWGegevens(Afkorting));""")
     print("Tabel 'tbl_VakDocentGegevens' aangemaakt.")
     cursor.execute("""CREATE TABLE IF NOT EXISTS tbl_VakPerNiveauGegevens(
-                   Niveau_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
-                   vak_id INTEGER NOT NULL, 
-                   FOREIGN KEY(vak_id) REFERENCES tbl_vakGegevens(vak_id), 
+                   Niveau_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
                    aantal_lessen INTEGER NOT NULL, 
-                   aantal_uur INTEGER);""")
+                   aantal_uur INTEGER,
+                   vak_id INTEGER NOT NULL,
+                    FOREIGN KEY(vak_id) REFERENCES tbl_vakGegevens(vak_id));""")
     print("Tabel 'tbl_VakDocentGegevens' aangemaakt.")
 
 
-# def printTabel(tabel_naam):
-#     cursor.execute("SELECT * FROM " + tabel_naam) #SQL om ALLE gegevens te halen
-#     opgehaalde_gegevens = cursor.fetchall() #sla gegevens op in een variabele
-#     print("Tabel " + tabel_naam + ":", opgehaalde_gegevens) #druk gegevens af
+def printTabel(tabel_naam):
+    cursor.execute("SELECT * FROM " + tabel_naam) #SQL om ALLE gegevens te halen
+    opgehaalde_gegevens = cursor.fetchall() #sla gegevens op in een variabele
+    print("Tabel " + tabel_naam + ":", opgehaalde_gegevens) #druk gegevens af
 
-# def voegPizzaToe(naam_nieuwe_pizza, prijs_nieuwe_pizza):
-#     cursor.execute("INSERT INTO tbl_pizzas VALUES(NULL, ?, ? )", (naam_nieuwe_pizza, prijs_nieuwe_pizza))
-#     db.commit() #gegevens naar de database wegschrijven
+def voegDocentToe(nieuwe_afkorting, nieuwe_voornaam, nieuw_tussenvoegsel, nieuwe_achternaam):
+    cursor.execute("INSERT INTO tbl_NAWGegevens VALUES(?, ?, ?, ? )", (nieuwe_afkorting, nieuwe_voornaam, nieuw_tussenvoegsel, nieuwe_achternaam))
+    db.commit() #gegevens naar de database wegschrijven
+    print("gegevens toegevoegd")
+    printTabel("tbl_NAWGegevens")
 
 # def verwijderPizza(gerechtNaam):
 #     cursor.execute("DELETE FROM tbl_pizzas WHERE gerechtNaam = ?", (gerechtNaam,))
@@ -116,8 +118,8 @@ def maakTabellenAan():
 maakTabellenAan()
 
 # #Voeg klanten toe aan tabel:
-# voegKlantToe("Janssen")
-# voegKlantToe("Smit")
+voegDocentToe("WEER","Renske", "", "Weeda")
+voegDocentToe("COUM","Mark","", "Coumans")
 
 # #Voeg pizza's toe aan tabel:
 # voegPizzaToe("Margarita", 9.50)

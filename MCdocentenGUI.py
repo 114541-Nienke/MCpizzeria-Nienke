@@ -73,9 +73,9 @@ knopSluit.grid(row=17, column=4)
 labelVoornaam = Label(venster, text="Voornaam:")
 labelVoornaam.grid(row=1, column=0, sticky="W")
 
-# ingevoerde_klantnaam = StringVar()
-# invoerveldKlantnaam = Entry(venster, textvariable=ingevoerde_klantnaam)
-# invoerveldKlantnaam.grid(row=1, column=1, sticky="W")
+ingevoerde_voornaam = StringVar()
+invoerveldVoornaam = Entry(venster, textvariable=ingevoerde_voornaam)
+invoerveldVoornaam.grid(row=1, column=1, sticky="W")
 
 labelAfkorting= Label(venster, text="Afkorting:")
 labelAfkorting.grid(row=2, column=0, sticky="W")
@@ -132,6 +132,6 @@ labelAchternaam.grid(row=5, column=0, sticky="W")
 # listboxWinkelwagen.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp)
 
 # #reageert op gebruikersinvoer, deze regel als laatste laten staan
-# venster.mainloop()
+venster.mainloop()
 # zoekKlant()
 
