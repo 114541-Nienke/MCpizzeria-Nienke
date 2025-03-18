@@ -39,7 +39,7 @@ def maakTabellenAan():
     cursor.execute("""CREATE TABLE IF NOT EXISTS tbl_VakPerNiveauGegevens(
                    Niveau_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
                    aantal_lessen INTEGER NOT NULL, 
-                   aantal_uur INTEGER,
+                   Niveau TEXT NOT NULL,
                    vak_id INTEGER NOT NULL,
                     FOREIGN KEY(vak_id) REFERENCES tbl_vakGegevens(vak_id));""")
     print("Tabel 'tbl_VakDocentGegevens' aangemaakt.")
@@ -53,14 +53,19 @@ def printTabel(tabel_naam):
 def voegDocentToe(nieuwe_afkorting, nieuwe_voornaam, nieuw_tussenvoegsel, nieuwe_achternaam):
     cursor.execute("INSERT INTO tbl_NAWGegevens VALUES(?, ?, ?, ? )", (nieuwe_afkorting, nieuwe_voornaam, nieuw_tussenvoegsel, nieuwe_achternaam))
     db.commit() #gegevens naar de database wegschrijven
-    print("gegevens toegevoegd")
-    printTabel("tbl_NAWGegevens")
 
-# def verwijderPizza(gerechtNaam):
-#     cursor.execute("DELETE FROM tbl_pizzas WHERE gerechtNaam = ?", (gerechtNaam,))
-#     print("Gerecht verwijderd uit 'tbl_pizzas':", gerechtNaam )
-#     db.commit() #gegevens naar de database wegschrijven
-#     printTabel("tbl_pizzas")
+def voegVakToe(nieuw_vak):
+    cursor.execute("INSERT INTO tbl_VakGegevens VALUES(NULL, ?)", (nieuw_vak,))
+    db.commit()
+
+def voegVakDocentToe(nieuw_aantal_uur, nieuw_vak_id, nieuwe_afkorting):
+    cursor.execute("INSERT INTO tbl_VakDocentGegevens VALUES(NULL, ?, ?, ?)", (nieuw_aantal_uur, nieuw_vak_id, nieuwe_afkorting))
+    db.commit()#gegevens in de database zetten
+
+def voegVakNiveauToe(nieuw_aantal_lessen, nieuw_niveau, nieuw_vak_id):
+    cursor.execute("INSERT INTO tbl_VakPerNiveauGegevens VALUES(NULL, ?, ?, ?)", (nieuw_aantal_lessen, nieuw_niveau, nieuw_vak_id))
+    db.commit()#gegevens in de database zetten
+
 
 # def pasGerechtAan(gerechtID, nieuweGerechtNaam, nieuwePrijs):
 #     cursor.execute("UPDATE tbl_pizzas SET gerechtNaam = ?, gerechtPrijs = ? WHERE gerechtID = ?", (nieuweGerechtNaam, nieuwePrijs, gerechtID ))
@@ -68,28 +73,15 @@ def voegDocentToe(nieuwe_afkorting, nieuwe_voornaam, nieuw_tussenvoegsel, nieuwe
 #     print("Gerecht aangepast")
 #     printTabel("tbl_pizzas")
 
-# def voegKlantToe(naam_nieuwe_klant):
-#     cursor.execute("INSERT INTO tbl_klanten VALUES(NULL, ?)", (naam_nieuwe_klant,))
-#     db.commit()
-#     print("Klant toegevoegd:")
-#     printTabel("tbl_klanten")
-
-# #Zoek alle gegevens over klant met ingevoerde naam
-# def zoekKlantInTabel(ingevoerde_klantnaam):
-#     cursor.execute("SELECT * FROM tbl_klanten WHERE klantAchternaam = ?", (ingevoerde_klantnaam,))
-#     zoek_resultaat = cursor.fetchall()
-#     if zoek_resultaat == []: #resultaat is leeg, geen gerecht gevonden
-#         print("Geen klant gevonden met achternaam", ingevoerde_klantnaam)
-#         print("Klant wordt nu toegevoegd.")
-#         cursor.execute("INSERT INTO tbl_klanten VALUES(NULL, ? )", (ingevoerde_klantnaam, ))
-#         db.commit() #gegevens in de database zetten
-#         print("Klant toegevoegd aan 'tbl_klanten':" + ingevoerde_klantnaam )
-#         printTabel("tbl_klanten")
-#         #nu dat klant in tabel is gezet, kunnen we zijn gegevens ophalen
-#         cursor.execute("SELECT * FROM tbl_klanten WHERE klantAchternaam = ?",(ingevoerde_klantnaam,))
-#         zoek_resultaat = cursor.fetchall()
-    
-#     return zoek_resultaat
+#Zoek alle gegevens over klant met ingevoerde naam
+def zoekDocentInTabel(ingevoerde_voornaam):
+    cursor.execute("SELECT * FROM tbl_NAWGegevens WHERE voornaam = ?", (ingevoerde_voornaam,))
+    zoek_resultaat = cursor.fetchall()
+    if zoek_resultaat == []: 
+        print("Geen docent gevonden met voornaam", ingevoerde_voornaam)  
+        cursor.execute("SELECT * FROM tbl_NAWGegevens WHERE voornaam = ?",(ingevoerde_voornaam,))
+        zoek_resultaat = cursor.fetchall()
+    return zoek_resultaat
 
 # def zoekPizzaInTabel(ingevoerde_pizza):
 #     cursor.execute("SELECT * FROM tbl_pizzas WHERE gerechtNaam = ?",(ingevoerde_pizza,))
@@ -102,11 +94,6 @@ def voegDocentToe(nieuwe_afkorting, nieuwe_voornaam, nieuw_tussenvoegsel, nieuwe
 #     print("Tabel tbl_pizzas:", resultaat)
 #     return resultaat
 
-# def voegToeAanWinkelWagen(klantNr, gerechtID, aantal):
-#     cursor.execute("INSERT INTO tbl_winkelWagen VALUES(NULL, ?, ?, ?)", (klantNr, gerechtID, aantal,))
-#     db.commit()#gegevens in de database zetten
-#     printTabel("tbl_winkelWagen")
-
 # def vraagOpGegevensWinkelWagenTabel():
 #     cursor.execute("SELECT * FROM tbl_winkelWagen")
 #     resultaat = cursor.fetchall()
@@ -117,13 +104,31 @@ def voegDocentToe(nieuwe_afkorting, nieuwe_voornaam, nieuw_tussenvoegsel, nieuwe
 
 maakTabellenAan()
 
-# #Voeg klanten toe aan tabel:
+# #Voeg docent toe aan tabel:
 voegDocentToe("WEER","Renske", "", "Weeda")
 voegDocentToe("COUM","Mark","", "Coumans")
+printTabel("tbl_NAWGegevens")
 
-# #Voeg pizza's toe aan tabel:
-# voegPizzaToe("Margarita", 9.50)
-# voegPizzaToe("Hawaii", 12.25)
-# voegPizzaToe("Salami", 10.00)
+#Voeg vak toe aan tabel:
+voegVakToe("Informatica")
+voegVakToe("Wiskunde A")
+voegVakToe("Wiskunde B")
+voegVakToe("Filosofie")
+printTabel("tbl_VakGegevens")
 
-# #zoekKlantInTabel("Smit")
+voegVakDocentToe("10", "1", "WEER")
+voegVakDocentToe("8", "2", "COUM")
+voegVakDocentToe("20", "3", "COUM")
+voegVakDocentToe("16", "4", "WIJJ")
+printTabel("tbl_VakDocentGegevens")
+
+voegVakNiveauToe("2", "Havo", "1")
+voegVakNiveauToe("2", "Havo", "2")
+voegVakNiveauToe("2", "Havo", "3")
+voegVakNiveauToe("2", "Havo", "4")
+voegVakNiveauToe("2", "Vwo", "1")
+voegVakNiveauToe("3", "Vwo", "2")
+voegVakNiveauToe("3", "Vwo", "3")
+voegVakNiveauToe("2", "Vwo", "4")
+printTabel("tbl_VakPerNiveauGegevens")
+

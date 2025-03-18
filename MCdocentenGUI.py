@@ -13,17 +13,19 @@ from tkinter import *
 import MCdocentenSQL
 
 ### ---------  Functie definities  -----------------
-# def zoekKlant():
-#     #haal de ingevoerde_klantnaam op uit het invoerveld en gebruik dit om met SQL de klant in database te vinden
-#     gevonden_klanten = MCPizzeriaSQL.zoekKlantInTabel(ingevoerde_klantnaam.get())
-#     print(gevonden_klanten) # om te testen
-#     invoerveldKlantnaam.delete(0, END) #invoerveld voor naam leeg maken
-#     invoerveldKlantNr.delete(0, END) #invoerveld voor klantNr leeg maken
-#     for rij in gevonden_klanten: #voor elke rij dat de query oplevert
-#         #toon klantnummer, de eerste kolom uit het resultaat in de invoerveld
-#         invoerveldKlantNr.insert(END, rij[0]) 
-#     #toon klantAchternaam, de tweede kolom uit het resultaat in de invoerveld
-#     invoerveldKlantnaam.insert(END, rij[1]) 
+def zoekDocent():
+    #haal de ingevoerde_klantnaam op uit het invoerveld en gebruik dit om met SQL de klant in database te vinden
+    gevonden_voornaam = MCdocentenSQL.zoekDocentInTabel(ingevoerde_voornaam.get())
+    print(gevonden_voornaam) # om te testen
+    invoerveldVoornaam.delete(0, END)
+    invoerveldAfkorting.delete(0, END)
+    invoerveldAchternaam.delete(0,END) 
+    invoerveldAantalUur.delete(0, END)
+    for rij in gevonden_voornaam: #voor elke rij dat de query oplevert
+        #toon klantnummer, de eerste kolom uit het resultaat in de invoerveld
+        invoerveldAfkorting.insert(END, rij[0]) 
+        invoerveldAchternaam.insert(END, rij[3]) 
+        invoerveldAantalUur.insert(END, R)
 
 # def zoekPizza(): 
 #     gevonden_pizza = MCPizzeriaSQL.zoekPizzaInTabel(ingevoerde_pizza.get())
@@ -78,26 +80,31 @@ invoerveldVoornaam = Entry(venster, textvariable=ingevoerde_voornaam)
 invoerveldVoornaam.grid(row=1, column=1, sticky="W")
 
 labelAfkorting= Label(venster, text="Afkorting:")
-labelAfkorting.grid(row=2, column=0, sticky="W")
-
-# invoerveldKlantNr = Entry(venster)
-# invoerveldKlantNr.grid(row=2, column=1, sticky="W")
-
-# knopZoekOpKlantnaam = Button(venster, text="Zoek klant", width=12, command=zoekKlant)
-# knopZoekOpKlantnaam.grid(row=1, column=4)
+labelAfkorting.grid(row=3, column=0, sticky="W")
 
 labelTussenvoegsel = Label(venster, text="Tussenvoegsel:")
 labelTussenvoegsel.grid(row=4, column=0, sticky="W")
 
-# ingevoerde_pizza= StringVar()
-# invoerveldPizzanaam = Entry(venster, textvariable=ingevoerde_pizza)
-# invoerveldPizzanaam.grid(row=4, column=1, sticky="W")
+labelAchternaam = Label(venster, text="Achternaam:")
+labelAchternaam.grid(row=5, column=0, sticky="W")
+
+ingevoerde_afkorting = StringVar()
+invoerveldAfkorting = Entry(venster, textvariable=ingevoerde_afkorting)
+invoerveldAfkorting.grid(row=3, column=1, sticky="W")
+
+ingevoerde_tussenvoegsel = StringVar()
+invoerveldTussenvoegsel = Entry(venster, textvariable=ingevoerde_tussenvoegsel)
+invoerveldTussenvoegsel.grid(row=4, column=1, sticky="W")
+
+ingevoerde_achternaam = StringVar()
+invoerveldAchternaam = Entry(venster, textvariable=ingevoerde_achternaam)
+invoerveldAchternaam.grid(row=5, column=1, sticky="W")
+
+knopZoekVoornaam= Button(venster, text="Zoek docent", width=12, command=zoekDocent)
+knopZoekVoornaam.grid(row=2, column=20)
 
 # knopZoekOpPizzaNaam = Button(venster, text="Zoek pizza", width=12, command=zoekPizza)
 # knopZoekOpPizzaNaam.grid(row=4, column=4)
-
-labelAchternaam = Label(venster, text="Achternaam:")
-labelAchternaam.grid(row=5, column=0, sticky="W")
 
 # listboxMenu = Listbox(venster, height=6, width=50)
 # listboxMenu.grid(row=5, column=1, rowspan=6, columnspan=2, sticky="W")
@@ -105,13 +112,6 @@ labelAchternaam.grid(row=5, column=0, sticky="W")
 
 # knopToonPizzas = Button(venster, text="Toon alle pizza's", width=12, command=toonMenuInListbox)
 # knopToonPizzas.grid(row=5, column=4)
-
-# labelGekozenPizza = Label(venster, text="Gekozen pizza:")
-# labelGekozenPizza.grid(row=14, column=0, sticky="W")
-
-# ingevoerde_geselecteerdePizza = StringVar()
-# invoerveldGeselecteerdePizza= Entry(venster, textvariable=ingevoerde_geselecteerdePizza)
-# invoerveldGeselecteerdePizza.grid(row=14, column=1, sticky="W")
 
 # labelAantal = Label(venster, text="Aantal:")
 # labelAantal.grid(row=15, column=0, sticky="W")
@@ -123,9 +123,6 @@ labelAchternaam.grid(row=5, column=0, sticky="W")
 
 # knopVoegToe = Button(venster, text="Voeg toe", width=12, command=voegToeAanWinkelWagen)
 # knopVoegToe.grid(row=15 , column=4)
-
-# labelBestelling = Label(venster, text="Bestelling:")
-# labelBestelling.grid(row=16, column=0, sticky="W")
 
 # listboxWinkelwagen= Listbox(venster, height=6, width=50)
 # listboxWinkelwagen.grid(row=16, column=1, rowspan=6, columnspan=2, sticky="W")
