@@ -107,6 +107,7 @@ maakTabellenAan()
 # #Voeg docent toe aan tabel:
 voegDocentToe("WEER","Renske", "", "Weeda")
 voegDocentToe("COUM","Mark","", "Coumans")
+voegDocentToe("WIJJ", "Janneke", "van", "Wijnbergen")
 printTabel("tbl_NAWGegevens")
 
 #Voeg vak toe aan tabel:

@@ -20,23 +20,21 @@ def zoekDocent():
     invoerveldVoornaam.delete(0, END)
     invoerveldAfkorting.delete(0, END)
     invoerveldAchternaam.delete(0,END) 
-    invoerveldAantalUur.delete(0, END)
     for rij in gevonden_voornaam: #voor elke rij dat de query oplevert
         #toon klantnummer, de eerste kolom uit het resultaat in de invoerveld
         invoerveldAfkorting.insert(END, rij[0]) 
         invoerveldAchternaam.insert(END, rij[3]) 
-        invoerveldAantalUur.insert(END, R)
 
 # def zoekPizza(): 
 #     gevonden_pizza = MCPizzeriaSQL.zoekPizzaInTabel(ingevoerde_pizza.get())
 #     print(gevonden_pizza)
 
-# def toonMenuInListbox():
-#     listboxMenu.delete(0, END) #maak de listbox leeg
-#     pizza_tabel = MCPizzeriaSQL.vraagOpGegevensPizzaTabel()
-#     listboxMenu.insert(0, "ID Gerecht Prijs")
-#     for regel in pizza_tabel:
-#         listboxMenu.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
+def toonVakkenInListbox():
+    listboxVakken.delete(0, END) #maak de listbox leeg
+    vak_tabel = MCdocentenSQL.vraagOpGegevensVakTabel()
+    listboxVakken.insert(0, "Alle vakken")
+    for regel in vak_tabel:
+        listboxVakken.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
 
 # def voegToeAanWinkelWagen():
 #     klantNr = invoerveldKlantNr.get()
@@ -49,16 +47,16 @@ def zoekDocent():
 #         listboxWinkelwagen.insert(END, regel)
 
 
-# ### functie voor het selecteren van een rij uit de listbox en deze in een andere veld te plaatsen
-# def haalGeselecteerdeRijOp(event):
-#     #bepaal op welke regel er geklikt is
-#     geselecteerdeRegelInLijst = listboxMenu.curselection()[0] 
-#     #haal tekst uit die regel
-#     geselecteerdeTekst = listboxMenu.get(geselecteerdeRegelInLijst) 
-#     #verwijder tekst uit veld waar je in wilt schrijven, voor het geval er al iets staat
-#     invoerveldGeselecteerdePizza.delete(0, END) 
-#     #zet tekst in veld
-#     invoerveldGeselecteerdePizza.insert(0, geselecteerdeTekst)
+### functie voor het selecteren van een rij uit de listbox en deze in een andere veld te plaatsen
+def haalGeselecteerdeRijOp(event):
+    #bepaal op welke regel er geklikt is
+    geselecteerdeRegelInLijst = listboxVakken.curselection()[0] 
+    #haal tekst uit die regel
+    geselecteerdeTekst = listboxVakken.get(geselecteerdeRegelInLijst) 
+    #verwijder tekst uit veld waar je in wilt schrijven, voor het geval er al iets staat
+    invoerveldGekozenVak.delete(0, END) 
+    #zet tekst in veld
+    invoerveldGekozenVak.insert(0, geselecteerdeTekst)
 
 # ### --------- Hoofdprogramma  ---------------
 
@@ -102,6 +100,20 @@ invoerveldAchternaam.grid(row=5, column=1, sticky="W")
 
 knopZoekVoornaam= Button(venster, text="Zoek docent", width=12, command=zoekDocent)
 knopZoekVoornaam.grid(row=2, column=20)
+
+labelVakken = Label(venster, text="Vakken:")
+labelVakken.grid(row=6, column=0, sticky="W")
+
+listboxVakken = Listbox(venster, height = 6, width = 15)
+listboxVakken.grid(row=6, column=1, rowspan=6, columnspan=2, sticky="W")
+listboxVakken.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp)
+
+labelGekozenVak = Label(venster, text="Gekozen vak:")
+labelGekozenVak.grid(row=12, column=0, sticky="W")
+
+ingevoerde_vak = StringVar()
+invoerveldGekozenVak = Entry(venster, textvariable=ingevoerde_vak)
+invoerveldGekozenVak.grid(row=12, column=1, sticky="W")
 
 # knopZoekOpPizzaNaam = Button(venster, text="Zoek pizza", width=12, command=zoekPizza)
 # knopZoekOpPizzaNaam.grid(row=4, column=4)
