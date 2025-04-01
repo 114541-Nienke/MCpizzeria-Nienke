@@ -88,11 +88,21 @@ def zoekDocentInTabel(ingevoerde_voornaam):
 #     zoek_resultaat = cursor.fetchall()
 #     return zoek_resultaat
 
-# def vraagOpGegevensPizzaTabel():
-#     cursor.execute("SELECT * FROM tbl_pizzas")
-#     resultaat = cursor.fetchall()
-#     print("Tabel tbl_pizzas:", resultaat)
-#     return resultaat
+def vraagOpGegevensVakken():
+    cursor.execute("SELECT * FROM tbl_VakGegevens")
+    resultaat = cursor.fetchall()
+    print("Tabel tbl_VakGegevens:", resultaat)
+    return resultaat
+
+def zoekVakinTabel(ingevoerde_vak, niveauGekozen):
+    print(niveauGekozen)
+    print(ingevoerde_vak)
+    cursor.execute("SELECT * FROM tbl_VakGegevens LEFT JOIN tbl_VakPerNiveauGegevens ON tbl_VakGegevens.vak_id = tbl_VakPerNiveauGegevens.vak_id  WHERE vak_naam = ? AND Niveau = ? " , (ingevoerde_vak, niveauGekozen,))
+    vak_resultaat = cursor.fetchall()
+    if vak_resultaat == []:  
+        cursor.execute("SELECT * FROM tbl_VakGegevens LEFT JOIN tbl_VakPerNiveauGegevens ON tbl_VakGegevens.vak_id = tbl_VakPerNiveauGegevens.vak_id WHERE vak_naam = ? AND Niveau = ?" ,(ingevoerde_vak, niveauGekozen,))
+        vak_resultaat = cursor.fetchall()
+    return vak_resultaat
 
 # def vraagOpGegevensWinkelWagenTabel():
 #     cursor.execute("SELECT * FROM tbl_winkelWagen")
@@ -105,9 +115,9 @@ def zoekDocentInTabel(ingevoerde_voornaam):
 maakTabellenAan()
 
 # #Voeg docent toe aan tabel:
+voegDocentToe("WIJJ", "Janneke", "van", "Wijnbergen")
 voegDocentToe("WEER","Renske", "", "Weeda")
 voegDocentToe("COUM","Mark","", "Coumans")
-voegDocentToe("WIJJ", "Janneke", "van", "Wijnbergen")
 printTabel("tbl_NAWGegevens")
 
 #Voeg vak toe aan tabel:
