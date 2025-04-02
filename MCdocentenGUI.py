@@ -78,12 +78,35 @@ def haalGeselecteerdeRijOp(event):
 def zoekVak():
     #haal de ingevoerde_klantnaam op uit het invoerveld en gebruik dit om met SQL de klant in database te vinden
     gevonden_gegevens = MCdocentenSQL.zoekVakinTabel(ingevoerde_vak.get(), niveauGekozen.get())
-    print(gevonden_gegevens) # om te testen
     invoerveldAantalLessen.delete(0,END) 
     for rij in gevonden_gegevens: #voor elke rij dat de query oplevert
-        print(rij)
         invoerveldAantalLessen.insert(END, rij[3]) 
 
+def toonAfkortingenInListbox():
+    listboxAfkortingen.delete(0, END) #maak de listbox leeg
+    afkorting_tabel = MCdocentenSQL.vraagOpGegevensAfkortingen()
+    listboxAfkortingen.insert(0, "Alle afkortingen:")
+    for regel in afkorting_tabel:
+        listboxAfkortingen.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
+
+def haalGeselecteerdeRijOp1(event):
+    #bepaal op welke regel er geklikt is
+    geselecteerdeRegelInLijst = listboxAfkortingen.curselection()[0] 
+    #haal tekst uit die regel
+    geselecteerdeTekst = listboxAfkortingen.get(geselecteerdeRegelInLijst) 
+    print(geselecteerdeTekst)
+    #verwijder tekst uit veld waar je in wilt schrijven, voor het geval er al iets staat
+    invoerveldGekozenAfkorting.delete(0, END) 
+    #zet tekst in veld
+    invoerveldGekozenAfkorting.insert(0, geselecteerdeTekst[0])
+
+def zoekAfkorting():
+    #haal de ingevoerde_klantnaam op uit het invoerveld en gebruik dit om met SQL de klant in database te vinden
+    gevonden_gegevens = MCdocentenSQL.zoekAfkortinginTabel(ingevoerde_afkorting.get())
+    print(gevonden_gegevens) # om te testen
+    invoerveldVakCombi.delete(0,END) 
+    for rij in gevonden_gegevens: #voor elke rij dat de query oplevert
+        invoerveldVakCombi.insert(END, rij[0]) 
 
 ### --------- Hoofdprogramma  ---------------
 
@@ -124,71 +147,91 @@ invoerveldAfkorting = Entry(venster, textvariable=ingevoerde_afkorting)
 invoerveldAfkorting.grid(row=4, column=1, sticky="W")
 
 labelFoutmelding = Label(venster, text="", fg="red", bg="orange")
-labelFoutmelding.grid(row=7, column=0, padx=15)
+labelFoutmelding.grid(row=5, column=0, padx=15, pady=2, sticky="W")
 
 knopZoekVoornaam= Button(venster, text="Zoek docent", width=12, command= zoekDocent)
 knopZoekVoornaam.grid(row=1, column=20, padx=25)
 
-labelOranje = Label(venster, height = 1, width = 50, text="", bg="orange")
-labelOranje.grid(row=1, column=25, rowspan=10, columnspan=50)
+fotoDocent = Label(venster, bg="orange")
+fotoDocent.grid(row=6, column=0, rowspan= 35, columnspan=15, padx=15, pady=5, sticky="W")
+
+labelOranje = Label(venster, text="", bg="orange")
+labelOranje.grid(row=41, column=0, rowspan=20, columnspan=5)
 
 labelVakken = Label(venster, text="Vakken:")
-labelVakken.grid(row=1, column=75, sticky="W", padx=15, pady=2)
+labelVakken.grid(row=61, column=0, sticky="W", padx=15, pady=2)
 
 listboxVakken = Listbox(venster, height = 6, width = 20)
-listboxVakken.grid(row=1, column=76, rowspan=6, columnspan=20)
+listboxVakken.grid(row=61, column=1, rowspan=6, columnspan=20, sticky="W")
 listboxVakken.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp)
 
 scrollbarlistbox = Scrollbar(venster)
-scrollbarlistbox.grid(row=1, column=76, rowspan=6, sticky="E")
+scrollbarlistbox.grid(row=61, column=1, rowspan=6, sticky="E")
 listboxVakken.config(yscrollcommand=scrollbarlistbox.set)
 scrollbarlistbox.config(command=listboxVakken.yview)
 
 labelGekozenVak = Label(venster, text="Gekozen vak:")
-labelGekozenVak.grid(row=7, column=75, sticky="W", padx=15, pady=2)
+labelGekozenVak.grid(row=68, column=0, sticky="W", padx=15, pady=2)
 
 ingevoerde_vak = StringVar()
 invoerveldGekozenVak = Entry(venster, textvariable=ingevoerde_vak)
-invoerveldGekozenVak.grid(row=7, column=76, sticky="W")
+invoerveldGekozenVak.grid(row=68, column=1, sticky="W")
 
 knopToonVakken= Button(venster, text="Toon alle vakken", width=12, command=toonVakkenInListbox)
-knopToonVakken.grid(row=1, column=130, sticky="W", padx=20, pady=2)
+knopToonVakken.grid(row=61, column=15, sticky="W", padx=20, pady=2)
 
 labelNiveau = Label(venster, text="Niveau:")
-labelNiveau.grid(row=8, column=75, sticky="W", padx=15, pady=2)
+labelNiveau.grid(row=69, column=0, sticky="W", padx=15, pady=2)
 
 niveauGekozen = StringVar()
 niveauGekozen.set("Havo")
 optionMenuNiveau = OptionMenu(venster, niveauGekozen, "Havo", "Vwo")
-optionMenuNiveau.grid(row=8, column=76)
+optionMenuNiveau.grid(row=69, column=1)
 
 labelAantalLessen = Label(venster, text="Aantal lessen:")
-labelAantalLessen.grid(row=9, column=75, sticky="W", padx=15, pady=2)
+labelAantalLessen.grid(row=70, column=0, sticky="W", padx=15, pady=2)
 
 ingevoerde_aantal_lessen = StringVar()
 invoerveldAantalLessen = Entry(venster, textvariable=ingevoerde_aantal_lessen)
-invoerveldAantalLessen.grid(row=9, column=76, sticky="W")
+invoerveldAantalLessen.grid(row=70, column=1, sticky="W")
 
 knopZoekVak= Button(venster, text="Zoek vak", width=12, command=zoekVak)
-knopZoekVak.grid(row=7, column=130, sticky="W", padx=20, pady=2)
+knopZoekVak.grid(row=68, column=20, sticky="W", padx=20, pady=2)
 
-fotoPad = "school.png"
-padFoto =  ImageTk.PhotoImage(file=fotoPad)
-fotoDocent = Label(venster, image=padFoto)
-fotoDocent.grid(row=20, column=60, rowspan= 40, columnspan=60, padx=20, pady=2, sticky="E")
+# fotoPad = "school.png"
+# padFoto =  ImageTk.PhotoImage(file=fotoPad)
+# fotoDocent = Label(venster, image=padFoto)
+# fotoDocent.grid(row=20, column=60, rowspan= 40, columnspan=60, padx=20, pady=2, sticky="E")
 
-fotoDocent = Label(venster, bg="orange")
-fotoDocent.grid(row=8, column=0, rowspan= 35, columnspan=15, padx=15, pady=2, sticky="W")
+labelOranje1 = Label(venster, height = 1, width = 50, text="", bg="orange")
+labelOranje1.grid(row=1, column=25, rowspan=10, columnspan=20)
 
-# labelAfkortingLijst = Label(venster, text="Afkorting:")
-# labelAfkortingLijst.grid(row=9, column=75, sticky="W", padx=15, pady=2)
+labelAfkortingLijst = Label(venster, text="Afkorting:")
+labelAfkortingLijst.grid(row=1, column=55, sticky="W", padx=15, pady=2)
 
-# listboxAfkortingen = Listbox(venster, height = 6, width = 20)
-# listboxAfkortingen.grid(row=1, column=76, rowspan=6, columnspan=20)
-# listboxAfkortingen.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp)
+listboxAfkortingen = Listbox(venster, height = 6, width = 20)
+listboxAfkortingen.grid(row=1, column=56, sticky="W", rowspan=6, columnspan=20)
+listboxAfkortingen.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp1)
 
-# labelGekozenAfkorting = Label(venster, text="Gekozen afkorting:")
-# labelGekozenAfkorting.grid(row=7, column=75, sticky="W", padx=15, pady=2)
+knopToonAfkortingen= Button(venster, text="Toon alle afkortingen", width=18, command=toonAfkortingenInListbox)
+knopToonAfkortingen.grid(row=1, column=60, padx=20, pady=2)
+
+labelGekozenAfkorting = Label(venster, text="Gekozen afkorting:")
+labelGekozenAfkorting.grid(row=8, column=55, sticky="W", padx=15, pady=2)
+
+ingevoerde_afkorting = StringVar()
+invoerveldGekozenAfkorting = Entry(venster, textvariable=ingevoerde_afkorting)
+invoerveldGekozenAfkorting.grid(row=8, column=56, sticky="W")
+
+labelVakCombi = Label(venster, text="Vak:")
+labelVakCombi.grid(row=9, column=55, sticky="W", padx=15, pady=2)
+
+ingevoerde_vak_combi = StringVar()
+invoerveldVakCombi = Entry(venster, textvariable=ingevoerde_vak_combi)
+invoerveldVakCombi.grid(row=9, column=56, sticky="W")
+
+knopZoekAfkorting= Button(venster, text="Zoek Afkorting", width=12, command= zoekAfkorting)
+knopZoekAfkorting.grid(row=8, column=66, padx=25, sticky="W")
 
 # #reageert op gebruikersinvoer, deze regel als laatste laten staan
 venster.mainloop()

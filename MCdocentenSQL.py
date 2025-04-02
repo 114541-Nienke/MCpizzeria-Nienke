@@ -17,7 +17,6 @@ with sqlite3.connect("MCDocenten.db") as db:
 ### ---------  Functie definities  -----------------
 
 def maakTabellenAan():
- # Maak een nieuwe tabel met 3 kolommen: id, naam, prijs
     cursor.execute("""CREATE TABLE IF NOT EXISTS tbl_NAWGegevens(
                    Afkorting TEXT NOT NULL PRIMARY KEY,
                     Voornaam TEXT NOT NULL, 
@@ -83,11 +82,6 @@ def zoekDocentInTabel(ingevoerde_voornaam):
         zoek_resultaat = cursor.fetchall()
     return zoek_resultaat
 
-# def zoekPizzaInTabel(ingevoerde_pizza):
-#     cursor.execute("SELECT * FROM tbl_pizzas WHERE gerechtNaam = ?",(ingevoerde_pizza,))
-#     zoek_resultaat = cursor.fetchall()
-#     return zoek_resultaat
-
 def vraagOpGegevensVakken():
     cursor.execute("SELECT * FROM tbl_VakGegevens")
     resultaat = cursor.fetchall()
@@ -110,7 +104,19 @@ def zoekVakinTabel(ingevoerde_vak, niveauGekozen):
 # 	    print("Dat zijn wel veel letters. Probeer het nog een keer")
 #     return ingevoerde_voornaam_tekst
 
+def vraagOpGegevensAfkortingen():
+    cursor.execute("SELECT Afkorting FROM tbl_NAWGegevens")
+    resultaat = cursor.fetchall()
+    print("Tabel tbl_NAWGegevens:", resultaat)
+    return resultaat
 
+def zoekAfkortinginTabel(ingevoerde_afkorting):
+    cursor.execute("SELECT vak_naam FROM tbl_NAWGegevens LEFT JOIN tbl_VakDocentGegevens ON tbl_NAWGegevens.Afkorting = tbl_VakDocentGegevens.Afkorting LEFT JOIN tbl_VakGegevens ON tbl_VakDocentGegevens.vak_id = tbl_VakGegevens.vak_id WHERE tbl_NAWGegevens.Afkorting = ? ",(ingevoerde_afkorting,))
+    afkorting_resultaat = cursor.fetchall()
+    if afkorting_resultaat == []:  
+        cursor.execute("SELECT vak_naam FROM tbl_NAWGegevens LEFT JOIN tbl_VakDocentGegevens ON tbl_NAWGegevens.Afkorting = tbl_VakDocentGegevens.Afkorting LEFT JOIN tbl_VakGegevens ON tbl_VakDocentGegevens.vak_id = tbl_VakGegevens.vak_id WHERE tbl_NAWGegevens.Afkorting = ?" ,(ingevoerde_afkorting,))
+        afkorting_resultaat_resultaat = cursor.fetchall()
+    return afkorting_resultaat
 # ### --------- Hoofdprogramma  ---------------
 
 maakTabellenAan()
