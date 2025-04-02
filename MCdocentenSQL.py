@@ -78,7 +78,7 @@ def zoekDocentInTabel(ingevoerde_voornaam):
     cursor.execute("SELECT * FROM tbl_NAWGegevens WHERE voornaam = ?", (ingevoerde_voornaam,))
     zoek_resultaat = cursor.fetchall()
     if zoek_resultaat == []: 
-        print("Geen docent gevonden met voornaam", ingevoerde_voornaam)  
+        print("Geen docent gevonden met voornaam", ingevoerde_voornaam)
         cursor.execute("SELECT * FROM tbl_NAWGegevens WHERE voornaam = ?",(ingevoerde_voornaam,))
         zoek_resultaat = cursor.fetchall()
     return zoek_resultaat
@@ -95,8 +95,6 @@ def vraagOpGegevensVakken():
     return resultaat
 
 def zoekVakinTabel(ingevoerde_vak, niveauGekozen):
-    print(niveauGekozen)
-    print(ingevoerde_vak)
     cursor.execute("SELECT * FROM tbl_VakGegevens LEFT JOIN tbl_VakPerNiveauGegevens ON tbl_VakGegevens.vak_id = tbl_VakPerNiveauGegevens.vak_id  WHERE vak_naam = ? AND Niveau = ? " , (ingevoerde_vak, niveauGekozen,))
     vak_resultaat = cursor.fetchall()
     if vak_resultaat == []:  
@@ -104,11 +102,14 @@ def zoekVakinTabel(ingevoerde_vak, niveauGekozen):
         vak_resultaat = cursor.fetchall()
     return vak_resultaat
 
-# def vraagOpGegevensWinkelWagenTabel():
-#     cursor.execute("SELECT * FROM tbl_winkelWagen")
-#     resultaat = cursor.fetchall()
-#     print("Tabel tbl_winkelWagen:", resultaat)
-#     return resultaat
+# def foutInvoer(ingevoerde_voornaam, ingevoerde_voornaam_tekst): 
+#     ingevoerde_voornaam_tekst = ingevoerde_voornaam.get()
+#     if not ingevoerde_voornaam_tekst.isalpha(): 
+#         print("......")
+#     if len(ingevoerde_voornaam_tekst) > 15:
+# 	    print("Dat zijn wel veel letters. Probeer het nog een keer")
+#     return ingevoerde_voornaam_tekst
+
 
 # ### --------- Hoofdprogramma  ---------------
 
