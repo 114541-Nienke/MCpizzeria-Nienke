@@ -116,7 +116,7 @@ def zoekVakinTabel(ingevoerde_vak, niveauGekozen):
 maakTabellenAan()
 
 # #Voeg docent toe aan tabel:
-voegDocentToe("WIJJ", "Janneke", "van", "Wijnbergen")
+voegDocentToe("JALA", "Laurens", "", "Jansen")
 voegDocentToe("WEER","Renske", "", "Weeda")
 voegDocentToe("COUM","Mark","", "Coumans")
 printTabel("tbl_NAWGegevens")
@@ -125,13 +125,13 @@ printTabel("tbl_NAWGegevens")
 voegVakToe("Informatica")
 voegVakToe("Wiskunde A")
 voegVakToe("Wiskunde B")
-voegVakToe("Filosofie")
+voegVakToe("Scheikunde")
 printTabel("tbl_VakGegevens")
 
 voegVakDocentToe("10", "1", "WEER")
 voegVakDocentToe("8", "2", "COUM")
 voegVakDocentToe("20", "3", "COUM")
-voegVakDocentToe("16", "4", "WIJJ")
+voegVakDocentToe("16", "4", "JALA")
 printTabel("tbl_VakDocentGegevens")
 
 voegVakNiveauToe("2", "Havo", "1")

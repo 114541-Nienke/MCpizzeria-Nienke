@@ -17,20 +17,45 @@ import tkinter.messagebox
 
 ### ---------  Functie definities  -----------------
 def zoekDocent():
-    #haal de ingevoerde_klantnaam op uit het invoerveld en gebruik dit om met SQL de klant in database te vinden
-    gevonden_voornaam = MCdocentenSQL.zoekDocentInTabel(ingevoerde_voornaam.get())
-    print(gevonden_voornaam) # om te testen
+    ingevoerde_voornaam_tekst = (invoerveldVoornaam.get())  # Haal de invoer op
+    # **Stap 1: Controleer de invoer**
+    if not ingevoerde_voornaam_tekst.isalpha():
+        labelFoutmelding.config(text="Alleen letters toegestaan!", fg="red")
+        invoerveldVoornaam.delete(0, END)
+        return  # Stop de functie
+    if len(ingevoerde_voornaam_tekst) > 15:
+        labelFoutmelding.config(text="Max 15 tekens!", fg="red")
+        invoerveldVoornaam.delete(0, END)
+        return  # Stop de functie
+    gevonden_voornaam = MCdocentenSQL.zoekDocentInTabel(ingevoerde_voornaam_tekst)
+    if not gevonden_voornaam:  # Als de lijst leeg is
+        labelFoutmelding.config(text="Deze docent bestaat niet", fg="red")
+        invoerveldVoornaam.delete(0, END)
+        return  # Stop de functie
+    print(gevonden_voornaam)  # Debugging
+    labelFoutmelding.config(text="")  
     invoerveldAfkorting.delete(0, END)
-    invoerveldAchternaam.delete(0,END) 
-    for rij in gevonden_voornaam: #voor elke rij dat de query oplevert
-        #toon klantnummer, de eerste kolom uit het resultaat in de invoerveld
-        invoerveldAfkorting.insert(END, rij[0]) 
+    invoerveldAchternaam.delete(0, END)
+    invoerveldTussenvoegsel.delete(0, END)
+    for rij in gevonden_voornaam:  # Voor elke rij in het resultaat
+        invoerveldAfkorting.insert(END, rij[0])
         invoerveldTussenvoegsel.insert(END, rij[2])
         invoerveldAchternaam.insert(END, rij[3]) 
-
-# def zoekPizza(): 
-#     gevonden_pizza = MCPizzeriaSQL.zoekPizzaInTabel(ingevoerde_pizza.get())
-#     print(gevonden_pizza)
+    if ingevoerde_voornaam_tekst == "Mark":
+        padFotoGeselecteerdeDocent =  ImageTk.PhotoImage(file="Markie.png")
+        fotoDocent.config(image=padFotoGeselecteerdeDocent)
+        fotoDocent.image = padFotoGeselecteerdeDocent
+        return padFotoGeselecteerdeDocent
+    if ingevoerde_voornaam_tekst == "Renske":
+        padFotoGeselecteerdeDocent =  ImageTk.PhotoImage(file="renske.png")
+        fotoDocent.config(image=padFotoGeselecteerdeDocent)
+        fotoDocent.image = padFotoGeselecteerdeDocent
+        return padFotoGeselecteerdeDocent
+    if ingevoerde_voornaam_tekst == "Laurens":
+        padFotoGeselecteerdeDocent =  ImageTk.PhotoImage(file="laurens.png")
+        fotoDocent.config(image=padFotoGeselecteerdeDocent)
+        fotoDocent.image = padFotoGeselecteerdeDocent
+        return padFotoGeselecteerdeDocent
 
 def toonVakkenInListbox():
     listboxVakken.delete(0, END) #maak de listbox leeg
@@ -39,23 +64,6 @@ def toonVakkenInListbox():
     for regel in vak_tabel:
         listboxVakken.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
 
-#maakt een pop-up met tekst
-def onClick(): 
-    tkinter.messagebox.showinfo("Dit is een pop-up venster!")
-#Zorgt voor knop waar dat een pop-up opent
- 
-# def voegToeAanWinkelWagen():
-#     klantNr = invoerveldKlantNr.get()
-#     gerechtID = ingevoerde_geselecteerdePizza.get()
-#     aantal = aantalGekozen.get()
-#     MCPizzeriaSQL.voegToeAanWinkelWagen(klantNr, gerechtID, aantal )
-#     winkelwagen_tabel = MCPizzeriaSQL.vraagOpGegevensWinkelWagenTabel()
-#     listboxWinkelwagen.delete(0, END) #listbox eerst even leeg maken
-#     for regel in winkelwagen_tabel:
-#         listboxWinkelwagen.insert(END, regel)
-
-
-### functie voor het selecteren van een rij uit de listbox en deze in een andere veld te plaatsen
 def haalGeselecteerdeRijOp(event):
     #bepaal op welke regel er geklikt is
     geselecteerdeRegelInLijst = listboxVakken.curselection()[0] 
@@ -75,23 +83,6 @@ def zoekVak():
     for rij in gevonden_gegevens: #voor elke rij dat de query oplevert
         print(rij)
         invoerveldAantalLessen.insert(END, rij[3]) 
-
-def foutInvoer():
-    ingevoerde_voornaam_tekst = invoerveldVoornaam.get()  # Haal de invoer op uit het veld
-
-    if not ingevoerde_voornaam_tekst.isalpha():  
-        print("Ongeldige invoer: alleen letters zijn toegestaan!")
-        invoerveldVoornaam.delete(0, END)  # Wis het invoerveld
-        labelFoutmelding.config(text="Alleen letters toegestaan!", fg="red")
-        return  # Stop de functie hier
-
-    if len(ingevoerde_voornaam_tekst) > 15:
-        print("Dat zijn wel veel letters. Probeer het nog een keer")
-        invoerveldVoornaam.delete(0, END)
-        labelFoutmelding.config(text="Max 15 tekens!", fg="red")
-        return  
-
-    # Als alles goed is, haal de foutmelding weg
 
 
 ### --------- Hoofdprogramma  ---------------
@@ -132,8 +123,11 @@ ingevoerde_afkorting = StringVar()
 invoerveldAfkorting = Entry(venster, textvariable=ingevoerde_afkorting)
 invoerveldAfkorting.grid(row=4, column=1, sticky="W")
 
+labelFoutmelding = Label(venster, text="", fg="red", bg="orange")
+labelFoutmelding.grid(row=7, column=0, padx=15)
+
 knopZoekVoornaam= Button(venster, text="Zoek docent", width=12, command= zoekDocent)
-knopZoekVoornaam.grid(row=1, column=20, padx=25, pady=2)
+knopZoekVoornaam.grid(row=1, column=20, padx=25)
 
 labelOranje = Label(venster, height = 1, width = 50, text="", bg="orange")
 labelOranje.grid(row=1, column=25, rowspan=10, columnspan=50)
@@ -160,9 +154,6 @@ invoerveldGekozenVak.grid(row=7, column=76, sticky="W")
 knopToonVakken= Button(venster, text="Toon alle vakken", width=12, command=toonVakkenInListbox)
 knopToonVakken.grid(row=1, column=130, sticky="W", padx=20, pady=2)
 
-# knopToonPizzas = Button(venster, text="Toon alle pizza's", width=12, command=toonMenuInListbox)
-# knopToonPizzas.grid(row=5, column=4)
-
 labelNiveau = Label(venster, text="Niveau:")
 labelNiveau.grid(row=8, column=75, sticky="W", padx=15, pady=2)
 
@@ -181,20 +172,23 @@ invoerveldAantalLessen.grid(row=9, column=76, sticky="W")
 knopZoekVak= Button(venster, text="Zoek vak", width=12, command=zoekVak)
 knopZoekVak.grid(row=7, column=130, sticky="W", padx=20, pady=2)
 
-fotoPad = "Markie.png"
-padFotoGeselecteerdeDocent =  ImageTk.PhotoImage(file=fotoPad)
-fotoDocent = Label(venster, width=200, height=200, 
-image=padFotoGeselecteerdeDocent)
-fotoDocent.grid(row=18, column=0, padx=20, pady=2)
+fotoPad = "school.png"
+padFoto =  ImageTk.PhotoImage(file=fotoPad)
+fotoDocent = Label(venster, image=padFoto)
+fotoDocent.grid(row=20, column=60, rowspan= 40, columnspan=60, padx=20, pady=2, sticky="E")
 
+fotoDocent = Label(venster, bg="orange")
+fotoDocent.grid(row=8, column=0, rowspan= 35, columnspan=15, padx=15, pady=2, sticky="W")
 
-# Voeg een foutmelding-label toe in je GUI
-labelFoutmelding = Label(venster, text="", fg="red")
-labelFoutmelding.grid(row=2, column=2)
+# labelAfkortingLijst = Label(venster, text="Afkorting:")
+# labelAfkortingLijst.grid(row=9, column=75, sticky="W", padx=15, pady=2)
 
-# Voeg een knop toe om te testen
-knopCheckInvoer = Button(venster, text="Check invoer", command=foutInvoer)
-knopCheckInvoer.grid(row=1, column=2, padx=10, pady=2)
+# listboxAfkortingen = Listbox(venster, height = 6, width = 20)
+# listboxAfkortingen.grid(row=1, column=76, rowspan=6, columnspan=20)
+# listboxAfkortingen.bind('<<ListboxSelect>>', haalGeselecteerdeRijOp)
+
+# labelGekozenAfkorting = Label(venster, text="Gekozen afkorting:")
+# labelGekozenAfkorting.grid(row=7, column=75, sticky="W", padx=15, pady=2)
 
 # #reageert op gebruikersinvoer, deze regel als laatste laten staan
 venster.mainloop()
