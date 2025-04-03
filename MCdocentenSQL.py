@@ -65,13 +65,6 @@ def voegVakNiveauToe(nieuw_aantal_lessen, nieuw_niveau, nieuw_vak_id):
     cursor.execute("INSERT INTO tbl_VakPerNiveauGegevens VALUES(NULL, ?, ?, ?)", (nieuw_aantal_lessen, nieuw_niveau, nieuw_vak_id))
     db.commit()#gegevens in de database zetten
 
-
-# def pasGerechtAan(gerechtID, nieuweGerechtNaam, nieuwePrijs):
-#     cursor.execute("UPDATE tbl_pizzas SET gerechtNaam = ?, gerechtPrijs = ? WHERE gerechtID = ?", (nieuweGerechtNaam, nieuwePrijs, gerechtID ))
-#     db.commit() #gegevens naar de database wegschrijven
-#     print("Gerecht aangepast")
-#     printTabel("tbl_pizzas")
-
 #Zoek alle gegevens over klant met ingevoerde naam
 def zoekDocentInTabel(ingevoerde_voornaam):
     cursor.execute("SELECT * FROM tbl_NAWGegevens WHERE voornaam = ?", (ingevoerde_voornaam,))
@@ -96,14 +89,6 @@ def zoekVakinTabel(ingevoerde_vak, niveauGekozen):
         vak_resultaat = cursor.fetchall()
     return vak_resultaat
 
-# def foutInvoer(ingevoerde_voornaam, ingevoerde_voornaam_tekst): 
-#     ingevoerde_voornaam_tekst = ingevoerde_voornaam.get()
-#     if not ingevoerde_voornaam_tekst.isalpha(): 
-#         print("......")
-#     if len(ingevoerde_voornaam_tekst) > 15:
-# 	    print("Dat zijn wel veel letters. Probeer het nog een keer")
-#     return ingevoerde_voornaam_tekst
-
 def vraagOpGegevensAfkortingen():
     cursor.execute("SELECT Afkorting FROM tbl_NAWGegevens")
     resultaat = cursor.fetchall()
@@ -115,7 +100,7 @@ def zoekAfkortinginTabel(ingevoerde_afkorting):
     afkorting_resultaat = cursor.fetchall()
     if afkorting_resultaat == []:  
         cursor.execute("SELECT vak_naam FROM tbl_NAWGegevens LEFT JOIN tbl_VakDocentGegevens ON tbl_NAWGegevens.Afkorting = tbl_VakDocentGegevens.Afkorting LEFT JOIN tbl_VakGegevens ON tbl_VakDocentGegevens.vak_id = tbl_VakGegevens.vak_id WHERE tbl_NAWGegevens.Afkorting = ?" ,(ingevoerde_afkorting,))
-        afkorting_resultaat_resultaat = cursor.fetchall()
+        afkorting_resultaat = cursor.fetchall()
     return afkorting_resultaat
 # ### --------- Hoofdprogramma  ---------------
 
@@ -134,12 +119,14 @@ voegVakToe("Wiskunde B")
 voegVakToe("Scheikunde")
 printTabel("tbl_VakGegevens")
 
+# invullen tabel vak docent
 voegVakDocentToe("10", "1", "WEER")
 voegVakDocentToe("8", "2", "COUM")
 voegVakDocentToe("20", "3", "COUM")
 voegVakDocentToe("16", "4", "JALA")
 printTabel("tbl_VakDocentGegevens")
 
+# invullen tabel vak Niveau
 voegVakNiveauToe("2", "Havo", "1")
 voegVakNiveauToe("2", "Havo", "2")
 voegVakNiveauToe("2", "Havo", "3")

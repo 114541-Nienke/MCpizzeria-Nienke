@@ -16,31 +16,40 @@ from PIL import Image, ImageTk
 import tkinter.messagebox
 
 ### ---------  Functie definities  -----------------
+# Deze functie vult de gegevens die bij een voornaam horen in en checkt of de invoer klopt. Hij laat ook een plaatjes per docent zien.
 def zoekDocent():
     ingevoerde_voornaam_tekst = (invoerveldVoornaam.get())  # Haal de invoer op
-    # **Stap 1: Controleer de invoer**
+    # Checkt of de invoer geen cijfers bevat
     if not ingevoerde_voornaam_tekst.isalpha():
         labelFoutmelding.config(text="Alleen letters toegestaan!", fg="red")
         invoerveldVoornaam.delete(0, END)
-        return  # Stop de functie
+        return 
+    # Checkt de lengte van de invoer
     if len(ingevoerde_voornaam_tekst) > 15:
         labelFoutmelding.config(text="Max 15 tekens!", fg="red")
         invoerveldVoornaam.delete(0, END)
-        return  # Stop de functie
+        return
     gevonden_voornaam = MCdocentenSQL.zoekDocentInTabel(ingevoerde_voornaam_tekst)
-    if not gevonden_voornaam:  # Als de lijst leeg is
+    # Checkt of de naam in de tabel staat
+    if not gevonden_voornaam:  
         labelFoutmelding.config(text="Deze docent bestaat niet", fg="red")
         invoerveldVoornaam.delete(0, END)
-        return  # Stop de functie
-    print(gevonden_voornaam)  # Debugging
+        return  
+    print(gevonden_voornaam) 
+    #Haalt de foutmelding weg als de invoer klopt
     labelFoutmelding.config(text="")  
+    # Verwijdert de gegevens zodat er nieuwe kun worden ingevuld
     invoerveldAfkorting.delete(0, END)
     invoerveldAchternaam.delete(0, END)
     invoerveldTussenvoegsel.delete(0, END)
+    
+    # Zet bijpassende waardes in de invoervelden
     for rij in gevonden_voornaam:  # Voor elke rij in het resultaat
         invoerveldAfkorting.insert(END, rij[0])
         invoerveldTussenvoegsel.insert(END, rij[2])
         invoerveldAchternaam.insert(END, rij[3]) 
+
+    #Laat de plaatjes zien
     if ingevoerde_voornaam_tekst == "Mark":
         padFotoGeselecteerdeDocent =  ImageTk.PhotoImage(file="Markie.png")
         fotoDocent.config(image=padFotoGeselecteerdeDocent)
@@ -64,6 +73,7 @@ def toonVakkenInListbox():
     for regel in vak_tabel:
         listboxVakken.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
 
+# Hoort bij het stukje vakken
 def haalGeselecteerdeRijOp(event):
     #bepaal op welke regel er geklikt is
     geselecteerdeRegelInLijst = listboxVakken.curselection()[0] 
@@ -89,6 +99,7 @@ def toonAfkortingenInListbox():
     for regel in afkorting_tabel:
         listboxAfkortingen.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
 
+# Hoort bij het stukje afkortingen
 def haalGeselecteerdeRijOp1(event):
     #bepaal op welke regel er geklikt is
     geselecteerdeRegelInLijst = listboxAfkortingen.curselection()[0] 
@@ -118,6 +129,7 @@ venster.config(bg="orange")
 knopSluit = Button(venster, text="Sluiten", width=10, command=venster.destroy)
 knopSluit.grid(row=100, column=300, sticky="E")
 
+# Stukje links boven 
 labelVoornaam = Label(venster, text="Voornaam:")
 labelVoornaam.grid(row=1, column=0, sticky="W", padx=15, pady=2)
 
@@ -155,6 +167,7 @@ knopZoekVoornaam.grid(row=1, column=20, padx=25)
 fotoDocent = Label(venster, bg="orange")
 fotoDocent.grid(row=6, column=0, rowspan= 35, columnspan=15, padx=15, pady=5, sticky="W")
 
+# Stukje linksonder
 labelOranje = Label(venster, text="", bg="orange")
 labelOranje.grid(row=41, column=0, rowspan=20, columnspan=5)
 
@@ -203,6 +216,7 @@ knopZoekVak.grid(row=68, column=20, sticky="W", padx=20, pady=2)
 # fotoDocent = Label(venster, image=padFoto)
 # fotoDocent.grid(row=20, column=60, rowspan= 40, columnspan=60, padx=20, pady=2, sticky="E")
 
+# Stukje rechtsboven
 labelOranje1 = Label(venster, height = 1, width = 50, text="", bg="orange")
 labelOranje1.grid(row=1, column=25, rowspan=10, columnspan=20)
 
@@ -231,7 +245,7 @@ invoerveldVakCombi = Entry(venster, textvariable=ingevoerde_vak_combi)
 invoerveldVakCombi.grid(row=9, column=56, sticky="W")
 
 knopZoekAfkorting= Button(venster, text="Zoek Afkorting", width=12, command= zoekAfkorting)
-knopZoekAfkorting.grid(row=8, column=66, padx=25, sticky="W")
+knopZoekAfkorting.grid(row=8, column=60, padx=25, sticky="W")
 
 # #reageert op gebruikersinvoer, deze regel als laatste laten staan
 venster.mainloop()
